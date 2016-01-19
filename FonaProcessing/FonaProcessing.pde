@@ -18,48 +18,39 @@ void setup() {
   textFont(font);
 
   size(1200, 600);
-  background(0);
+  background(125);
   fill(0, 200, 0);
 
-  for (int i = 0; i < Serial.list ().length; i++) {   //list Serial Ports
-    println(i + " --> " + Serial.list()[i]);
-  }
-  String portName = Serial.list()[7];                 //change this number to match your Serial port
+  printArray(Serial.list());
+  String portName = Serial.list()[9];                 //change this number to match your Serial port
   myPort = new Serial(this, portName, 9600);
   // read bytes into a buffer until you get a linefeed (ASCII 10):
   myPort.bufferUntil(linefeed);
 }
 
 void draw() {
-  fill(random(100, 255), random(100, 255), random(100, 255));
-}
-
-// serialEvent  method is run automatically by the Processing applet
-// whenever the buffer reaches the  byte value set in the bufferUntil() 
-// method in the setup():
-
-void serialEvent(Serial myPort) { 
-  // read the serial buffer:
-
-  myString = myPort.readStringUntil(linefeed);
-  // if you got any bytes other than the linefeed:
-  if (myString != null && newMessage!=myString) {
+  if (myString != null && newMessage!=myString) { 
     String splitMessage = myString;    
     String[] words = split(splitMessage, ' ');   //split the string into individual words
-    background(0);
-    size = (height/words.length)-1;              //text size is determined by dividing number of words by height
+    size = (height/(words.length+2));              //text size is determined by dividing number of words by height
     textAlign(CENTER);
+    background(0);
 
     y = (height/2) - ((size * words.length)/2) + size;     //this centers the text vertically based on number of words
 
     for (int i=0; i<words.length; i++) { 
-      if (textWidth(words[i])>width){                  //keeps short messages from being too big
+      if (textWidth(words[i])>width) {                  //keeps short messages from being too big
         size=size-25;
       }
-      textSize(size);      
+      textSize(size); 
+      fill(random(255), random(255), random(255));
       text(words[i], width/2, y + (i*size));            //prints words on canvas
     }
+    newMessage=myString;   //used to see when new message comes in
   }
-  newMessage=myString;                                 //used to see when new message comes in
 }
 
+void serialEvent(Serial mySerial) { 
+  // read the serial buffer:
+  myString = mySerial.readStringUntil(linefeed);
+}
