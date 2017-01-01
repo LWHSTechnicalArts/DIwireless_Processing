@@ -22,7 +22,7 @@ void setup() {
   fill(0, 200, 0);
 
   printArray(Serial.list());
-  String portName = Serial.list()[9];                 //change this number to match your Serial port
+  String portName = Serial.list()[7];                 //change this number to match your Serial port
   myPort = new Serial(this, portName, 9600);
   // read bytes into a buffer until you get a linefeed (ASCII 10):
   myPort.bufferUntil(linefeed);
